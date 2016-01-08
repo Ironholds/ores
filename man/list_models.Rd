@@ -7,7 +7,7 @@
 list_models(project, ...)
 }
 \arguments{
-\item{project}{a project. Supported projects can be obtained with
+\item{project}{a Wikimedia project. Supported projects can be obtained with
 \code{\link{list_wikis}}.}
 
 \item{...}{further arguments to pass to httr's GET.}
