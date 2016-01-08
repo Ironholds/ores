@@ -17,7 +17,7 @@ ores_query <- function(path, ...){
 list_wikis <- function(...){
   
   result <- ores_query("scores/", ...)
-  return(result$contexts)
+  return(unlist(result$contexts))
 }
 
 #'@title List Model Information

@@ -5,13 +5,16 @@ Authors@R: person("Oliver", "Keyes", email = "ironholds@gmail.com", role = c("au
 Description: A connector to ORES, an AI project to provide edit scoring for content
              on Wikipedia and other Wikimedia projects. This lets a researcher identify
              if edits are likely to be reverted, damaging, or made in good faith.
-Depends:
+Depends: 
     R (>= 3.1.2),
     httr
 License: MIT + file LICENSE
 URL: https://github.com/Ironholds/ores
 BugReports: https://github.com/Ironholds/ores/issues
 LazyData: true
-Suggests:
-    testthat
+Suggests: 
+    testthat,
+    knitr,
+    rmarkdown
 RoxygenNote: 5.0.1
+VignetteBuilder: knitr
