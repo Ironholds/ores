@@ -13,8 +13,29 @@ list_wikis <- function(...){
   return(result$contexts)
 }
 
+#'@title List Model Information
+#'@description \code{\link{list_models}} lists information about
+#'the models for a particular wiki, including what models are available,
+#'how they have been trained, information about the model's accuracy and
+#'ROC, and the model's version.
+#'
+#'@param project a project. Supported projects can be obtained with
+#'\code{\link{list_wikis}}.
+#'
+#'@param ... further arguments to pass to httr's GET.
+#'
+#'@examples
+#'# Get model information for the English-language Wikipedia
+#'model_data <- list_models("enwiki")
+#'
+#'@seealso \code{\link{list_wikis}} for retrieving the list of supported projects,
+#'and \code{\link{check_reverted}} and similar for actual checking
+#'against models.
+#'
+#'@export
 list_models <- function(project, ...){
-  
+  result <- ores_query(paste0("scores/", project, "/", ...))
+  return(result$models)
 }
 
 #'@title Check Revert Probabilities
