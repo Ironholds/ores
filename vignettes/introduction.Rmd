@@ -11,12 +11,12 @@ vignette: >
 
 The Objective Revision Evaluation System (ORES) is a service for evaluating Wikipedia edits by various metrics, backed by a machine learning system. This vignette provides a guide to that service and to the API client in R of the same name.
 
-## How ORES works
+### How ORES works
 ORES provides a machine learning platform for Wikimedia users, letting them plug in machine learning algorithms or sets of information about edits and train models to classify edits in various ways. It currently identifies whether an edit was made in good faith, whether an edit is likely to be reverted, and whether an edit harmed the article it was made to.
 
 The platform has a public API, and so this R package hooks into it and makes it easy to score a series of edits using the models that ORES has.
 
-## ORES metadata
+### ORES metadata
 Not all projects are supported yet, and not all projects have all of the models; adapting a model to a new language and cultural context takes time. The `ores` package provides functions to identify what projects are supported, what models they have, and how accurate those models are.
 
 With `list_wikis` you can do just what it says on the tin; list projects that have some kind of ORES support:
@@ -33,51 +33,12 @@ list_wikis()
 
 Once you've identified the project you want and that it is supported, you can see what models it has and various information about them - accuracy, methodology, the size of the training group - with `list_models`, which accepts a wiki name and spits out all of that information.
 
+### Checking edits
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+As said, ORES currently has three models:
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+1. Checking whether an edit is likely to be reverted - in other words, removed. This model can be accessed with `check_reverted()`;
+2. Checking whether an edit was made in good faith; whether it was well-intentioned, even if it wasn't necessarily high-quality, with `check_goodfaith()`;
+3. Checking whether an edit was damaging, and actively harmed an article, with `check_damaging()`.
 
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
-
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+All of these functions have the same structure - you provide a project and a vector of edit IDs, and it spits out a data.frame containing the project, edit ID, prediction, and probability of that prediction being right or wrong.

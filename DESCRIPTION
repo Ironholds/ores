@@ -1,8 +1,8 @@
 Package: ores
 Title: Connector to the Objective Revision Evaluation Service (ORES)
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: person("Oliver", "Keyes", email = "ironholds@gmail.com", role = c("aut", "cre"))
-Description: A connector to ORES, an AI project to provide edit scoring for content
+Description: A connector to ORES (<http://ores.wmflabs.org/>), an AI project to provide edit scoring for content
              on Wikipedia and other Wikimedia projects. This lets a researcher identify
              if edits are likely to be reverted, damaging, or made in good faith.
 Depends: 
