@@ -110,6 +110,10 @@ check_reverted <- function(project, edits, ...){
 #'prediction is correct. In the event of an error (due to the edit
 #'not being available) NAs will be returned in that row.
 #'
+#'@examples
+#'# A simple, single-diff example
+#'goodfaith_data <- check_goodfaith("enwiki", 34854345)
+#'
 #'@seealso
 #'\code{\link{check_reverted}} to identify if a set of edits are likely
 #'to be reverted, and \code{\link{check_damaging}} to check if a set of edits
@@ -155,6 +159,10 @@ check_goodfaith <- function(project, edits, ...){
 #'is wrong, and \code{true_prob}, the probability that the model's
 #'prediction is correct. In the event of an error (due to the edit
 #'not being available) NAs will be returned in that row.
+#'
+#'@examples
+#'# A simple, single-diff example
+#'damaging_data <- check_damaging("enwiki", 34854345)
 #'
 #'@seealso
 #'\code{\link{check_goodfaith}} to identify if a set of edits were made

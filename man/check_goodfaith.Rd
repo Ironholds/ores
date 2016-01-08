@@ -28,6 +28,11 @@ not being available) NAs will be returned in that row.
 or not an edit was made in 'good faith' - whether it was well-intentioned,
 even if it is not a high-quality contribution.
 }
+\examples{
+# A simple, single-diff example
+goodfaith_data <- check_goodfaith("enwiki", 34854345)
+
+}
 \seealso{
 \code{\link{check_reverted}} to identify if a set of edits are likely
 to be reverted, and \code{\link{check_damaging}} to check if a set of edits

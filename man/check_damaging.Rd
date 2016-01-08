@@ -28,6 +28,11 @@ not being available) NAs will be returned in that row.
 or not an edit was damaging - the type that caused actual
 harm to an article.
 }
+\examples{
+# A simple, single-diff example
+damaging_data <- check_damaging("enwiki", 34854345)
+
+}
 \seealso{
 \code{\link{check_goodfaith}} to identify if a set of edits were made
 in good faith, and \code{\link{check_reverted}} to check if a set of edits
