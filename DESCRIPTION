@@ -1,11 +1,16 @@
 Package: ores
-Title: What the Package Does (one line, title case)
+Title: Connector to the Objective Revision Evaluation Service (ORES)
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: person("Oliver", "Keyes", email = "ironholds@gmail.com", role = c("aut", "cre"))
+Description: A connector to ORES, an AI project to provide edit scoring for content
+             on Wikipedia and other Wikimedia projects. This lets a researcher identify
+             if edits are likely to be reverted, damaging, or made in good faith.
 Depends:
-    R (>= 3.1.2)
-License: What license is it under?
+    R (>= 3.1.2),
+    httr
+License: MIT + file LICENSE
+URL: https://github.com/Ironholds/ores
+BugReports: https://github.com/Ironholds/ores/issues
 LazyData: true
 Suggests:
     testthat
