@@ -7,7 +7,11 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 
 ## Installation
 
-At the moment `ores` lives on GitHub; you can install it with:
+`ores` can be obtained from CRAN with:
+
+> install.packages("ores")
+
+The package also lives on GitHub; you can install it with:
 
 > devtools::install_github("ironholds/ores")
 
