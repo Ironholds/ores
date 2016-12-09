@@ -8,7 +8,8 @@ check_reverted(project, edits, ...)
 }
 \arguments{
 \item{project}{a Wikimedia project. Supported projects can be obtained with
-\code{\link{list_wikis}}.}
+\code{\link{list_wikis}}. If NULL (the default), model information will be
+retrieved for all projects.}
 
 \item{edits}{a vector of edit IDs, as integers.}
 
@@ -35,7 +36,8 @@ revert_data <- check_reverted("enwiki", 34854345)
 }
 \seealso{
 \code{\link{check_goodfaith}} to identify if a set of edits were made
-in good faith, and \code{\link{check_damaging}} to check if a set of edits
+in good faith, \code{\link{check_quality}} to see a prediction of the article quality class,
+and \code{\link{check_damaging}} to check if a set of edits
 were damaging.
 }
 

@@ -35,10 +35,11 @@ Once you've identified the project you want and that it is supported, you can se
 
 ### Checking edits
 
-As said, ORES currently has three models:
+As said, ORES currently has four models:
 
 1. Checking whether an edit is likely to be reverted - in other words, removed. This model can be accessed with `check_reverted()`;
 2. Checking whether an edit was made in good faith; whether it was well-intentioned, even if it wasn't necessarily high-quality, with `check_goodfaith()`;
-3. Checking whether an edit was damaging, and actively harmed an article, with `check_damaging()`.
+3. Checking whether an edit was damaging, and actively harmed an article, with `check_damaging()`'
+4. Predicting the quality of an article, with `check_quality()`
 
 All of these functions have the same structure - you provide a project and a vector of edit IDs, and it spits out a data.frame containing the project, edit ID, prediction, and probability of that prediction being right or wrong.

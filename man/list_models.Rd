@@ -4,13 +4,18 @@
 \alias{list_models}
 \title{List Model Information}
 \usage{
-list_models(project, ...)
+list_models(project = NULL, ...)
 }
 \arguments{
 \item{project}{a Wikimedia project. Supported projects can be obtained with
-\code{\link{list_wikis}}.}
+\code{\link{list_wikis}}. If NULL (the default), model information will be
+retrieved for all projects.}
 
 \item{...}{further arguments to pass to httr's GET.}
+}
+\value{
+a data.frame of three columns - the \code{project} of the model,
+the \code{model} name and the model \code{version}.
 }
 \description{
 \code{\link{list_models}} lists information about

@@ -1,10 +1,10 @@
 ores_query <- function(path, ...){
   
-  url <- paste0("http://ores.wmflabs.org/", path)
+  url <- paste0("http://ores.wmflabs.org/v2/", path)
   ua <- httr::user_agent("ORES R Client - https://github.com/Ironholds/ores")
   result <- httr::GET(url, ua, ...)
   httr::stop_for_status(result)
-  return(httr::content(result))
+  return(httr::content(result, encoding = "UTF-8"))
 }
 
 #'@title List Supported Projects
@@ -17,7 +17,7 @@ ores_query <- function(path, ...){
 list_wikis <- function(...){
   
   result <- ores_query("scores/", ...)
-  return(unlist(result$contexts))
+  return(names(result$scores))
 }
 
 #'@title List Model Information
@@ -27,9 +27,13 @@ list_wikis <- function(...){
 #'ROC, and the model's version.
 #'
 #'@param project a Wikimedia project. Supported projects can be obtained with
-#'\code{\link{list_wikis}}.
+#'\code{\link{list_wikis}}. If NULL (the default), model information will be
+#'retrieved for all projects.
 #'
 #'@param ... further arguments to pass to httr's GET.
+#'
+#'@return a data.frame of three columns - the \code{project} of the model,
+#'the \code{model} name and the model \code{version}.
 #'
 #'@examples
 #'# Get model information for the English-language Wikipedia
@@ -40,9 +44,28 @@ list_wikis <- function(...){
 #'against models.
 #'
 #'@export
-list_models <- function(project, ...){
-  result <- ores_query(paste0("scores/", project, "/", ...))
-  return(result$models)
+list_models <- function(project = NULL, ...){
+  if(is.null(project)){
+    result <- ores_query(paste0("scores/"), ...)$scores
+  } else {
+    result <- ores_query(paste0("scores/", project, "/", ...))$scores
+  }
+  
+  return(do.call("rbind", mapply(function(x, name){
+    
+        holding <- unlist(x)
+        
+        return(data.frame(
+          project = name,
+          model = gsub(x = names(holding), pattern = ".version", replacement = "", fixed = TRUE),
+          version = unname(holding),
+          stringsAsFactors = FALSE
+        ))
+        
+      }, x = result, name = names(result),
+      SIMPLIFY = FALSE, USE.NAMES = FALSE)
+    )
+  )
 }
 
 #'@title Check Revert Probabilities
@@ -66,35 +89,38 @@ list_models <- function(project, ...){
 #'
 #'@seealso
 #'\code{\link{check_goodfaith}} to identify if a set of edits were made
-#'in good faith, and \code{\link{check_damaging}} to check if a set of edits
+#'in good faith, \code{\link{check_quality}} to see a prediction of the article quality class,
+#'and \code{\link{check_damaging}} to check if a set of edits
 #'were damaging.
 #'
 #'@inheritParams list_models
 #'@export
 check_reverted <- function(project, edits, ...){
-
-  result <- lapply(edits, function(id, project, ...){
-    
-    data <- ores_query(path = paste0("scores/", project, "/reverted/", id),
-                       ...)
-    if("error" %in% names(data[[1]])){
-      return(data.frame(edit = names(data),
+  
+  data <- ores_query(
+    path = paste0("scores/", project, "/?models=reverted&revids=", paste(edits, collapse = "|"))
+    )$scores[[project]]$reverted$scores
+  
+  out <- do.call("rbind", mapply(function(x, name, project){
+    if("error" %in% names(x)){
+      return(data.frame(edit = name,
                         project = project,
                         prediction = NA,
                         false_prob = NA,
                         true_prob = NA,
                         stringsAsFactors = FALSE))
     }
-    return(data.frame(edit = names(data),
-                      project = project,
-                      prediction = data[[1]]$prediction,
-                      false_prob = data[[1]]$probability$false,
-                      true_prob = data[[1]]$probability$true,
-                      stringsAsFactors = FALSE))
     
-  }, project = project)
+    return(data.frame(edit = name,
+                      project = project,
+                      prediction = x$prediction,
+                      false_prob = x$probability$false,
+                      true_prob = x$probability$true,
+                      stringsAsFactors = FALSE))
+  }, x = data, name = names(data), project = project, SIMPLIFY = FALSE,
+  USE.NAMES = FALSE))
   
-  return(do.call("rbind", result))
+  return(out)
 }
 
 #'@title Check Good-Faith Probability
@@ -116,35 +142,38 @@ check_reverted <- function(project, edits, ...){
 #'
 #'@seealso
 #'\code{\link{check_reverted}} to identify if a set of edits are likely
-#'to be reverted, and \code{\link{check_damaging}} to check if a set of edits
+#'to be reverted, \code{\link{check_quality}} to see a prediction of the article quality class,
+#'and \code{\link{check_damaging}} to check if a set of edits
 #'were damaging.
 #'
 #'@inheritParams check_reverted
 #'@export
 check_goodfaith <- function(project, edits, ...){
   
-  result <- lapply(edits, function(id, project, ...){
-    
-    data <- ores_query(path = paste0("scores/", project, "/goodfaith/", id),
-                       ...)
-    if("error" %in% names(data[[1]])){
-      return(data.frame(edit = names(data),
+  data <- ores_query(
+    path = paste0("scores/", project, "/?models=goodfaith&revids=", paste(edits, collapse = "|"))
+  )$scores[[project]]$goodfaith$scores
+  
+  out <- do.call("rbind", mapply(function(x, name, project){
+    if("error" %in% names(x)){
+      return(data.frame(edit = name,
                         project = project,
                         prediction = NA,
                         false_prob = NA,
                         true_prob = NA,
                         stringsAsFactors = FALSE))
     }
-    return(data.frame(edit = names(data),
-                      project = project,
-                      prediction = data[[1]]$prediction,
-                      false_prob = data[[1]]$probability$false,
-                      true_prob = data[[1]]$probability$true,
-                      stringsAsFactors = FALSE))
     
-  }, project = project)
+    return(data.frame(edit = name,
+                      project = project,
+                      prediction = x$prediction,
+                      false_prob = x$probability$false,
+                      true_prob = x$probability$true,
+                      stringsAsFactors = FALSE))
+  }, x = data, name = names(data), project = project, SIMPLIFY = FALSE,
+  USE.NAMES = FALSE))
   
-  return(do.call("rbind", result))
+  return(out)
 }
 
 #'@title Check Damaging Probability
@@ -166,33 +195,96 @@ check_goodfaith <- function(project, edits, ...){
 #'
 #'@seealso
 #'\code{\link{check_goodfaith}} to identify if a set of edits were made
-#'in good faith, and \code{\link{check_reverted}} to check if a set of edits
+#'in good faith, \code{\link{check_quality}} to see a prediction of the article quality class,
+#'and \code{\link{check_reverted}} to check if a set of edits
 #'are likely to be reverted.
 #'
 #'@inheritParams check_reverted
 #'@export
 check_damaging <- function(project, edits, ...){
   
-  result <- lapply(edits, function(id, project, ...){
-    
-    data <- ores_query(path = paste0("scores/", project, "/damaging/", id),
-                       ...)
-    if("error" %in% names(data[[1]])){
-      return(data.frame(edit = names(data),
+  data <- ores_query(
+    path = paste0("scores/", project, "/?models=damaging&revids=", paste(edits, collapse = "|"))
+  )$scores[[project]]$damaging$scores
+  
+  out <- do.call("rbind", mapply(function(x, name, project){
+    if("error" %in% names(x)){
+      return(data.frame(edit = name,
                         project = project,
                         prediction = NA,
                         false_prob = NA,
                         true_prob = NA,
                         stringsAsFactors = FALSE))
     }
-    return(data.frame(edit = names(data),
+    
+    return(data.frame(edit = name,
                       project = project,
-                      prediction = data[[1]]$prediction,
-                      false_prob = data[[1]]$probability$false,
-                      true_prob = data[[1]]$probability$true,
+                      prediction = x$prediction,
+                      false_prob = x$probability$false,
+                      true_prob = x$probability$true,
+                      stringsAsFactors = FALSE))
+  }, x = data, name = names(data), project = project, SIMPLIFY = FALSE,
+  USE.NAMES = FALSE))
+  
+  return(out)
+}
+
+#'@title Check Article Class
+#'@description \code{check_quality} identifies the quality class of the
+#'article at the moment a particular edit was made.
+#'
+#'@return A data.frame of nine columns; \code{edit}, the
+#'edit ID, \code{project}, the project, \code{prediction},
+#'the class that the model predicts the article has, and then one column
+#'each for the probability of the article being in each possible class.
+#'In the event of an error (due to the edit
+#'not being available) NAs will be returned in that row.
+#'
+#'@examples
+#'# A simple, single-diff example
+#'article_class <- check_quality("enwiki", 34854345)
+#'
+#'@seealso
+#'\code{\link{check_goodfaith}} to identify if a set of edits were made
+#'in good faith, \code{\link{check_damaging}} to see if a set of edits caused harm,
+#'and \code{\link{check_reverted}} to check if a set of edits
+#'are likely to be reverted.
+#'
+#'@inheritParams check_reverted
+#'@export
+check_quality <- function(project, edits, ...){
+  data <- ores_query(
+    path = paste0("scores/", project, "/?models=wp10&revids=", paste(edits, collapse = "|"))
+  )$scores[[project]]$wp10$scores
+  
+  out <- do.call("rbind", mapply(function(x, name, project){
+    print(x)
+    if("error" %in% names(x)){
+      return(data.frame(edit = name,
+                        project = project,
+                        prediction = NA,
+                        stub_prob = NA,
+                        start_prob = NA,
+                        c_prob = NA,
+                        b_prob = NA,
+                        ga_prob = NA,
+                        fa_prob = NA,
+                        stringsAsFactors = FALSE))
+    }
+    
+    return(data.frame(edit = name,
+                      project = project,
+                      prediction = x$prediction,
+                      stub_prob = x$probability$Stub,
+                      start_prob = x$probability$Start,
+                      c_prob = x$probability$C,
+                      b_prob = x$probability$B,
+                      ga_prob = x$probability$GA,
+                      fa_prob = x$probability$FA,
                       stringsAsFactors = FALSE))
     
-  }, project = project)
+  }, x = data, name = names(data), project = project, SIMPLIFY = FALSE,
+  USE.NAMES = FALSE))
   
-  return(do.call("rbind", result))
+  return(out)
 }
