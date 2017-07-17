@@ -40,4 +40,3 @@ in good faith, \code{\link{check_quality}} to see a prediction of the article qu
 and \code{\link{check_reverted}} to check if a set of edits
 are likely to be reverted.
 }
-

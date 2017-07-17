@@ -40,4 +40,3 @@ to be reverted, \code{\link{check_quality}} to see a prediction of the article q
 and \code{\link{check_damaging}} to check if a set of edits
 were damaging.
 }
-

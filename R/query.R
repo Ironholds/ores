@@ -1,6 +1,6 @@
 ores_query <- function(path, ...){
   
-  url <- paste0("http://ores.wmflabs.org/v2/", path)
+  url <- paste0("https://ores.wikimedia.org/v3/", path)
   ua <- httr::user_agent("ORES R Client - https://github.com/Ironholds/ores")
   result <- httr::GET(url, ua, ...)
   httr::stop_for_status(result)
@@ -17,7 +17,7 @@ ores_query <- function(path, ...){
 list_wikis <- function(...){
   
   result <- ores_query("scores/", ...)
-  return(names(result$scores))
+  return(names(result))
 }
 
 #'@title List Model Information
@@ -46,9 +46,9 @@ list_wikis <- function(...){
 #'@export
 list_models <- function(project = NULL, ...){
   if(is.null(project)){
-    result <- ores_query(paste0("scores/"), ...)$scores
+    result <- ores_query(paste0("scores/"), ...)
   } else {
-    result <- ores_query(paste0("scores/", project, "/", ...))$scores
+    result <- ores_query(paste0("scores/", project, "/", ...))
   }
   
   return(do.call("rbind", mapply(function(x, name){
@@ -57,7 +57,8 @@ list_models <- function(project = NULL, ...){
         
         return(data.frame(
           project = name,
-          model = gsub(x = names(holding), pattern = ".version", replacement = "", fixed = TRUE),
+          model = gsub(x = names(holding), pattern = "(\\.version|models\\.)",
+                       replacement = ""),
           version = unname(holding),
           stringsAsFactors = FALSE
         ))
@@ -98,10 +99,14 @@ list_models <- function(project = NULL, ...){
 check_reverted <- function(project, edits, ...){
   
   data <- ores_query(
-    path = paste0("scores/", project, "/?models=reverted&revids=", paste(edits, collapse = "|"))
-    )$scores[[project]]$reverted$scores
+    path = paste0("scores/", project, "?models=reverted&revids=",
+                  paste(edits, collapse = "|"))
+    )[[project]]$scores
   
   out <- do.call("rbind", mapply(function(x, name, project){
+    x <- x$reverted
+    cat(".")
+    
     if("error" %in% names(x)){
       return(data.frame(edit = name,
                         project = project,
@@ -110,7 +115,7 @@ check_reverted <- function(project, edits, ...){
                         true_prob = NA,
                         stringsAsFactors = FALSE))
     }
-    
+    x <- x$score
     return(data.frame(edit = name,
                       project = project,
                       prediction = x$prediction,
@@ -152,9 +157,10 @@ check_goodfaith <- function(project, edits, ...){
   
   data <- ores_query(
     path = paste0("scores/", project, "/?models=goodfaith&revids=", paste(edits, collapse = "|"))
-  )$scores[[project]]$goodfaith$scores
+  )[[project]]$scores
   
   out <- do.call("rbind", mapply(function(x, name, project){
+    x <- x$goodfaith
     if("error" %in% names(x)){
       return(data.frame(edit = name,
                         project = project,
@@ -163,7 +169,7 @@ check_goodfaith <- function(project, edits, ...){
                         true_prob = NA,
                         stringsAsFactors = FALSE))
     }
-    
+    x <- x$score
     return(data.frame(edit = name,
                       project = project,
                       prediction = x$prediction,
@@ -205,9 +211,10 @@ check_damaging <- function(project, edits, ...){
   
   data <- ores_query(
     path = paste0("scores/", project, "/?models=damaging&revids=", paste(edits, collapse = "|"))
-  )$scores[[project]]$damaging$scores
+  )[[project]]$scores
   
   out <- do.call("rbind", mapply(function(x, name, project){
+    x <- x$damaging
     if("error" %in% names(x)){
       return(data.frame(edit = name,
                         project = project,
@@ -216,7 +223,7 @@ check_damaging <- function(project, edits, ...){
                         true_prob = NA,
                         stringsAsFactors = FALSE))
     }
-    
+    x <- x$score
     return(data.frame(edit = name,
                       project = project,
                       prediction = x$prediction,
@@ -255,10 +262,10 @@ check_damaging <- function(project, edits, ...){
 check_quality <- function(project, edits, ...){
   data <- ores_query(
     path = paste0("scores/", project, "/?models=wp10&revids=", paste(edits, collapse = "|"))
-  )$scores[[project]]$wp10$scores
+  )[[project]]$scores
   
   out <- do.call("rbind", mapply(function(x, name, project){
-    print(x)
+    x <- x$wp10
     if("error" %in% names(x)){
       return(data.frame(edit = name,
                         project = project,
@@ -271,7 +278,7 @@ check_quality <- function(project, edits, ...){
                         fa_prob = NA,
                         stringsAsFactors = FALSE))
     }
-    
+    x <- x$score
     return(data.frame(edit = name,
                       project = project,
                       prediction = x$prediction,

@@ -33,4 +33,3 @@ model_data <- list_models("enwiki")
 and \code{\link{check_reverted}} and similar for actual checking
 against models.
 }
-

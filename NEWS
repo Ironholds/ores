@@ -1,3 +1,8 @@
+0.3.0 [WIP]
+=================
+
+* Support for the Version 3 API is now up.
+
 0.2.0
 =================
 * Support for the version 2 API is now included, fixing a bug in which NaNs were ommitted by the model-listing

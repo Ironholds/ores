@@ -13,4 +13,3 @@ list_wikis(...)
 \code{\link{list_wikis}} lists Wikimedia
 projects that support some or all of the ORES models.
 }
-

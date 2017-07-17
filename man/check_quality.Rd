@@ -38,4 +38,3 @@ in good faith, \code{\link{check_damaging}} to see if a set of edits caused harm
 and \code{\link{check_reverted}} to check if a set of edits
 are likely to be reverted.
 }
-
