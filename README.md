@@ -1,6 +1,6 @@
 # ORES API client
 
-[![Travis-CI Build Status](https://travis-ci.org/Ironholds/ores.svg?branch=master)](https://travis-ci.org/Ironholds/ores)[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ores)](https://cran.r-project.org/package=ores
+[![Travis-CI Build Status](https://travis-ci.org/Ironholds/ores.svg?branch=master)](https://travis-ci.org/Ironholds/ores) [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ores)](https://cran.r-project.org/package=ores
 ) ![downloads](http://cranlogs.r-pkg.org/badges/grand-total/ores)
 
 `ores` provides an API client for the Objective Revision Evaluation Service; an AI system designed to identify whether edits to Wikimedia projects like Wikipedia are damaging, likely to be reverted, or made in good faith, and what class of quality the underlying article falls into.
