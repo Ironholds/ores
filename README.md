@@ -19,8 +19,8 @@ check_damaging("enwiki", 34854345)
 
 # Check edit quality
 check_quality("enwiki", 34854345)
-# edit        project prediction   stub_prob start_prob     c_prob   b_prob     ga_prob   fa_prob
-#  1 34854345  enwiki         FA 0.001613388 0.01765724 0.02922814 0.2296085  0.009218907 0.7126738
+# edit    project prediction   stub_prob start_prob     c_prob   b_prob     ga_prob   fa_prob
+# 34854345  enwiki         FA 0.001613388 0.01765724 0.02922814 0.2296085  0.009218907 0.7126738
 
 ```
 ## Installation
