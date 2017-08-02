@@ -7,6 +7,23 @@
 
 Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
 
+## Use
+
+```
+library(ores)
+
+# Check if an edit does damage
+check_damaging("enwiki", 34854345)
+#       edit project prediction false_prob true_prob
+# 1 34854345  enwiki       TRUE  0.4381965 0.5618035
+
+# Check edit quality
+check_quality("enwiki", 34854345)
+# edit        project prediction   stub_prob start_prob     c_prob   b_prob         ga_prob   fa_prob
+#  1 34854345  enwiki         FA 0.001613388 0.01765724 0.02922814 0.2296085  0.009218907 0.7126738
+
+
+```
 ## Installation
 
 `ores` can be obtained from CRAN with:
@@ -16,9 +33,3 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 The package also lives on GitHub; you can install it with:
 
 > devtools::install_github("ironholds/ores")
-
-## Dependencies
-
-* R
-* httr
-* Love

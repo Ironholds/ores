@@ -8,7 +8,8 @@ Description: A connector to ORES (<http://ores.wmflabs.org/>), an AI project to 
              on Wikipedia and other Wikimedia projects. This lets a researcher identify
              if edits are likely to be reverted, damaging, or made in good faith.
 Depends: 
-    R (>= 3.1.2),
+    R (>= 3.1.2)
+Imports:
     httr
 License: MIT + file LICENSE
 URL: https://github.com/Ironholds/ores
