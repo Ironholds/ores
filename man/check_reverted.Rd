@@ -2,41 +2,13 @@
 % Please edit documentation in R/query.R
 \name{check_reverted}
 \alias{check_reverted}
-\title{Check Revert Probabilities}
+\title{Check Revert Probabilities (defunct)}
 \usage{
-check_reverted(project, edits, ...)
-}
-\arguments{
-\item{project}{a Wikimedia project. Supported projects can be obtained with
-\code{\link{list_wikis}}. If NULL (the default), model information will be
-retrieved for all projects.}
-
-\item{edits}{a vector of edit IDs, as integers.}
-
-\item{...}{further arguments to pass to httr's GET.}
-}
-\value{
-A data.frame of five columns; \code{edit}, the
-edit ID, \code{project}, the project, \code{prediction},
-whether the model predicts that the edit will be reverted,
-\code{false_prob}, the probability that the model's prediction
-is wrong, and \code{true_prob}, the probability that the model's
-prediction is correct. In the event of an error (due to the edit
-not being available) NAs will be returned in that row.
+check_reverted()
 }
 \description{
-\code{check_reverted} identifies
-whether or not an edit is considered likely, by
-the ORES models, to be reverted.
-}
-\examples{
-# A simple, single-diff example
-revert_data <- check_reverted("enwiki", 34854345)
-
-}
-\seealso{
-\code{\link{check_goodfaith}} to identify if a set of edits were made
-in good faith, \code{\link{check_quality}} to see a prediction of the article quality class,
-and \code{\link{check_damaging}} to check if a set of edits
-were damaging.
+\code{check_reverted} previously identified
+if an edit was considered likely, by
+the ORES models, to be reverted. This model has now been
+deprecated; users should instead rely on \code{\link{check_damaging}}
 }

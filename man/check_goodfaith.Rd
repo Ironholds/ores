@@ -11,7 +11,8 @@ check_goodfaith(project, edits, ...)
 \code{\link{list_wikis}}. If NULL (the default), model information will be
 retrieved for all projects.}
 
-\item{edits}{a vector of edit IDs, as integers.}
+\item{edits}{a revision ID, or vector of revision IDs, of the edits
+to check.}
 
 \item{...}{further arguments to pass to httr's GET.}
 }
@@ -35,8 +36,7 @@ goodfaith_data <- check_goodfaith("enwiki", 34854345)
 
 }
 \seealso{
-\code{\link{check_reverted}} to identify if a set of edits are likely
-to be reverted, \code{\link{check_quality}} to see a prediction of the article quality class,
+\code{\link{check_quality}} to see a prediction of the article quality class,
 and \code{\link{check_damaging}} to check if a set of edits
 were damaging.
 }

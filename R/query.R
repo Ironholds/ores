@@ -40,7 +40,7 @@ list_wikis <- function(...){
 #'model_data <- list_models("enwiki")
 #'
 #'@seealso \code{\link{list_wikis}} for retrieving the list of supported projects,
-#'and \code{\link{check_reverted}} and similar for actual checking
+#'and \code{\link{check_damaging}} and similar for actual checking
 #'against models.
 #'
 #'@export
@@ -69,69 +69,24 @@ list_models <- function(project = NULL, ...){
   )
 }
 
-#'@title Check Revert Probabilities
-#'@description \code{check_reverted} identifies
-#'whether or not an edit is considered likely, by
-#'the ORES models, to be reverted.
+#'@title Check Revert Probabilities (defunct)
+#'@description \code{check_reverted} previously identified
+#'if an edit was considered likely, by
+#'the ORES models, to be reverted. This model has now been
+#'deprecated; users should instead rely on \code{\link{check_damaging}}
 #'
-#'@param edits a vector of edit IDs, as integers.
-#'
-#'@return A data.frame of five columns; \code{edit}, the
-#'edit ID, \code{project}, the project, \code{prediction},
-#'whether the model predicts that the edit will be reverted,
-#'\code{false_prob}, the probability that the model's prediction
-#'is wrong, and \code{true_prob}, the probability that the model's
-#'prediction is correct. In the event of an error (due to the edit
-#'not being available) NAs will be returned in that row.
-#'
-#'@examples
-#'# A simple, single-diff example
-#'revert_data <- check_reverted("enwiki", 34854345)
-#'
-#'@seealso
-#'\code{\link{check_goodfaith}} to identify if a set of edits were made
-#'in good faith, \code{\link{check_quality}} to see a prediction of the article quality class,
-#'and \code{\link{check_damaging}} to check if a set of edits
-#'were damaging.
-#'
-#'@inheritParams list_models
 #'@export
-check_reverted <- function(project, edits, ...){
-  
-  data <- ores_query(
-    path = paste0("scores/", project, "?models=reverted&revids=",
-                  paste(edits, collapse = "|"))
-    )[[project]]$scores
-  
-  out <- do.call("rbind", mapply(function(x, name, project){
-    x <- x$reverted
-    cat(".")
-    
-    if("error" %in% names(x)){
-      return(data.frame(edit = name,
-                        project = project,
-                        prediction = NA,
-                        false_prob = NA,
-                        true_prob = NA,
-                        stringsAsFactors = FALSE))
-    }
-    x <- x$score
-    return(data.frame(edit = name,
-                      project = project,
-                      prediction = x$prediction,
-                      false_prob = x$probability$false,
-                      true_prob = x$probability$true,
-                      stringsAsFactors = FALSE))
-  }, x = data, name = names(data), project = project, SIMPLIFY = FALSE,
-  USE.NAMES = FALSE))
-  
-  return(out)
+check_reverted <- function(){
+  .Defunct(msg = "The reverted model has been removed from the ORES API")
 }
 
 #'@title Check Good-Faith Probability
 #'@description \code{check_goodfaith} identifies whether
 #'or not an edit was made in 'good faith' - whether it was well-intentioned,
 #'even if it is not a high-quality contribution.
+#'
+#'@param edits a revision ID, or vector of revision IDs, of the edits
+#'to check.
 #'
 #'@return A data.frame of five columns; \code{edit}, the
 #'edit ID, \code{project}, the project, \code{prediction},
@@ -146,12 +101,11 @@ check_reverted <- function(project, edits, ...){
 #'goodfaith_data <- check_goodfaith("enwiki", 34854345)
 #'
 #'@seealso
-#'\code{\link{check_reverted}} to identify if a set of edits are likely
-#'to be reverted, \code{\link{check_quality}} to see a prediction of the article quality class,
+#'\code{\link{check_quality}} to see a prediction of the article quality class,
 #'and \code{\link{check_damaging}} to check if a set of edits
 #'were damaging.
 #'
-#'@inheritParams check_reverted
+#'@inheritParams list_models
 #'@export
 check_goodfaith <- function(project, edits, ...){
   
@@ -201,11 +155,10 @@ check_goodfaith <- function(project, edits, ...){
 #'
 #'@seealso
 #'\code{\link{check_goodfaith}} to identify if a set of edits were made
-#'in good faith, \code{\link{check_quality}} to see a prediction of the article quality class,
-#'and \code{\link{check_reverted}} to check if a set of edits
-#'are likely to be reverted.
+#'in good faith, and \code{\link{check_quality}} to see a prediction of
+#'the article quality class.
 #'
-#'@inheritParams check_reverted
+#'@inheritParams check_goodfaith
 #'@export
 check_damaging <- function(project, edits, ...){
   
@@ -253,11 +206,10 @@ check_damaging <- function(project, edits, ...){
 #'
 #'@seealso
 #'\code{\link{check_goodfaith}} to identify if a set of edits were made
-#'in good faith, \code{\link{check_damaging}} to see if a set of edits caused harm,
-#'and \code{\link{check_reverted}} to check if a set of edits
-#'are likely to be reverted.
+#'in good faith, and \code{\link{check_damaging}} to see if a set of edits
+#'caused harm.
 #'
-#'@inheritParams check_reverted
+#'@inheritParams check_goodfaith
 #'@export
 check_quality <- function(project, edits, ...){
   data <- ores_query(

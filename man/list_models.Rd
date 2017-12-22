@@ -30,6 +30,6 @@ model_data <- list_models("enwiki")
 }
 \seealso{
 \code{\link{list_wikis}} for retrieving the list of supported projects,
-and \code{\link{check_reverted}} and similar for actual checking
+and \code{\link{check_damaging}} and similar for actual checking
 against models.
 }

@@ -1,7 +1,7 @@
 Package: ores
 Title: Connector to the Objective Revision Evaluation Service (ORES)
-Version: 0.3.0
-Date: 2017-08-02
+Version: 0.3.1
+Date: 2017-11-17
 Author: Oliver Keyes [aut, cre], Aaron Halfaker [ctb], Yuvi Panda [ctb]
 Maintainer: Oliver Keyes <ironholds@gmail.com>
 Description: A connector to ORES (<http://ores.wmflabs.org/>), an AI project to provide edit scoring for content
