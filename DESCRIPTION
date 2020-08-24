@@ -1,9 +1,9 @@
 Package: ores
 Title: Connector to the Objective Revision Evaluation Service (ORES)
-Version: 0.3.1
-Date: 2017-11-17
-Author: Oliver Keyes [aut, cre], Aaron Halfaker [ctb], Yuvi Panda [ctb]
-Maintainer: Oliver Keyes <ironholds@gmail.com>
+Version: 0.3.2
+Date: 2020-08-23
+Author: Os Keyes [aut, cre], Aaron Halfaker [ctb], Yuvi Panda [ctb]
+Maintainer: Os Keyes <ironholds@gmail.com>
 Description: A connector to ORES (<http://ores.wmflabs.org/>), an AI project to provide edit scoring for content
              on Wikipedia and other Wikimedia projects. This lets a researcher identify
              if edits are likely to be reverted, damaging, or made in good faith.
@@ -19,5 +19,5 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr

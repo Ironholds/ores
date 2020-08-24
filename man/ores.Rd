@@ -4,7 +4,6 @@
 \name{ores}
 \alias{ores}
 \alias{ores-package}
-\alias{ores-package}
 \title{Connector to the Objective Revision Evaluation Service (ORES)}
 \description{
 This package provides a connector to ORES, an AI project
